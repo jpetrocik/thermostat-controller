@@ -1,0 +1,17 @@
+{
+  "codename": "Ubuntu_Regular_45",
+  "ttf_path": "/assets/Ubuntu-Regular.ttf",
+  "bin_path": "/assets/ui_font_Ubuntu_Regular_45.bin",
+  "c_path": "/assets/ui_font_Ubuntu_Regular_45.c",
+  "cfg_path": "/assets/ui_font_Ubuntu_Regular_45.fcfg",
+  "size": 45,
+  "bpp": 4,
+  "letters": 0,
+  "ranges": [
+    "0x20-0x7f",
+    "         0xB0"
+  ],
+  "symbols": "",
+  "customparams": "--no-compress --no-prefilter",
+  "uploaded": false
+}

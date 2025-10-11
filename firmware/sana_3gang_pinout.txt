@@ -1,0 +1,14 @@
+
+OFF_LED 16
+LOW_LED 14
+HIGH_BUTTOM    12
+RELAY   13
+
+????    1
+OFF_BUTTOM    3
+LOW_BUTTOM    5
+RELAY   4
+HIGH_LED/BOOT    0
+????    2
+RELAY   15
+

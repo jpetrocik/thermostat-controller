@@ -1,0 +1,16 @@
+{
+  "codename": "Ubuntu_Bold_180",
+  "ttf_path": "/assets/Ubuntu-Bold.ttf",
+  "bin_path": "/assets/ui_font_Ubuntu_Bold_180.bin",
+  "c_path": "/assets/ui_font_Ubuntu_Bold_180.c",
+  "cfg_path": "/assets/ui_font_Ubuntu_Bold_180.fcfg",
+  "size": 150,
+  "bpp": 4,
+  "letters": 0,
+  "ranges": [
+    "0x20-0x7f"
+  ],
+  "symbols": "",
+  "customparams": "--no-compress --no-prefilter",
+  "uploaded": false
+}
