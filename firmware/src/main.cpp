@@ -19,8 +19,8 @@
 #include "ui/ui.h"
 
 /*Set to your screen resolution and rotation*/
-#define TFT_HOR_RES 480
-#define TFT_VER_RES 320
+#define TFT_HOR_RES 320
+#define TFT_VER_RES 480
 #define TFT_ROTATION LV_DISPLAY_ROTATION_0
 
 #define DRAW_BUF_SIZE (TFT_HOR_RES * TFT_VER_RES / 10 * (LV_COLOR_DEPTH / 8))
@@ -60,7 +60,7 @@ void setup()
 
   /*TFT_eSPI can be enabled lv_conf.h to initialize the display in a simple way*/
   lv_display_t *disp = lv_tft_espi_create(TFT_HOR_RES, TFT_VER_RES, lcd_drawBufffer, sizeof(lcd_drawBufffer));
-  // lv_display_set_rotation(disp, LV_DISPLAY_ROTATION_90);
+  lv_display_set_rotation(disp, LV_DISPLAY_ROTATION_90);
 
   ui_init();
   Serial.println("Setup done");
