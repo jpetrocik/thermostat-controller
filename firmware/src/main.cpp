@@ -58,16 +58,24 @@ uint32_t lcd_tickProvider()
   return millis();
 }
 
-#ifdef __cplusplus
+#ifndef __cplusplus
 extern "C"
 {
 #endif
-  void log_to_serial(const char *message)
+  void incrementTemp(int8_t delta)
   {
-    Serial.println(message);
-    ESP.restart();
+    temp += delta;
+    if (temp < 0)
+    {
+      temp = 0;
+    }
+    if (temp > 100)
+    {
+      temp = 100;
+    }
+    lv_label_set_text_fmt(ui_Set_Temperature, "%d", temp);
   }
-#ifdef __cplusplus
+#ifndef __cplusplus
 }
 #endif
 long x, y, z;
@@ -139,7 +147,7 @@ void setup()
   lv_indev_t *indev = lv_indev_create();
   lv_indev_set_type(indev, LV_INDEV_TYPE_POINTER);
   lv_indev_set_read_cb(indev, touchscreen_read);
-  lv_indev_set_long_press_time(indev, 250);
+  lv_indev_set_long_press_time(indev, 500);
   lv_indev_set_long_press_repeat_time(indev, 250);
 
   ui_init();

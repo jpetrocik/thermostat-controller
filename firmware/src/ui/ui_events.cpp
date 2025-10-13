@@ -6,18 +6,20 @@
 #include <Arduino.h>
 #include "ui.h"
 
+void incrementTemp(int8_t delta);
+
 void downTempEvent(lv_event_t *e)
 {
 	lv_obj_set_style_image_recolor(ui_Down_Arrow, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
 	lv_obj_set_style_image_recolor_opa(ui_Down_Arrow, 125, LV_PART_MAIN | LV_STATE_DEFAULT);
-	Serial.println("Pressed: Down Temp");
+	incrementTemp(-1);
 }
 
 void upTempEvent(lv_event_t *e)
 {
 	lv_obj_set_style_image_recolor(ui_Up_Arrow, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
 	lv_obj_set_style_image_recolor_opa(ui_Up_Arrow, 125, LV_PART_MAIN | LV_STATE_DEFAULT);
-	Serial.println("Pressed: Up Temp");
+	incrementTemp(1);
 }
 
 void upTempEventFinished(lv_event_t *e)
