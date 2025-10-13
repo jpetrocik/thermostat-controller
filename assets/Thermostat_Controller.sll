@@ -25,7 +25,7 @@
     "uiExportFolderPath": "/home/john/Development/personal/thermostat-controller/firmware/src/ui",
     "projectExportFolderPath": "/home/john/Development/personal/thermostat-controller/firmware/src",
     "custom_variable_prefix": "uic",
-    "backup_cnt": 18,
+    "backup_cnt": 19,
     "autosave_cnt": 0,
     "group_color_cnt": 0,
     "lvgl_version": "9.1.0",
@@ -43,5 +43,5 @@
     "naming": "Name",
     "naming_force_lowercase": false,
     "naming_add_subcomponent": false,
-    "nidcnt": 1000587
+    "nidcnt": 1000636
 }

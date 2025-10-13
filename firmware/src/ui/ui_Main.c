@@ -37,6 +37,9 @@ void ui_event_UpTempTarget(lv_event_t * e)
     if(event_code == LV_EVENT_LONG_PRESSED_REPEAT) {
         upTempEvent(e);
     }
+    if(event_code == LV_EVENT_RELEASED) {
+        upTempEventFinished(e);
+    }
 }
 
 void ui_event_DownTempTarget(lv_event_t * e)
@@ -51,6 +54,9 @@ void ui_event_DownTempTarget(lv_event_t * e)
     }
     if(event_code == LV_EVENT_LONG_PRESSED_REPEAT) {
         downTempEvent(e);
+    }
+    if(event_code == LV_EVENT_RELEASED) {
+        downTempEventFinished(e);
     }
 }
 

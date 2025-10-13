@@ -42,3 +42,11 @@ def upTempEvent(event_struct):
 def UpTempEvent(event_struct):
     return
 
+
+def upTempEventFinished(event_struct):
+    return
+
+
+def downTempEventFinished(event_struct):
+    return
+

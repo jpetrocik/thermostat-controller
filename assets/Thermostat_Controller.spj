@@ -627,6 +627,7 @@
               },
               {
                 "nid": 1010,
+                "flags": 1048576,
                 "strtype": "IMAGE/Image",
                 "InheritedType": 1
               },
@@ -2692,7 +2693,7 @@
                       {
                         "nid": 1000565,
                         "strtype": "CALL FUNCTION/Function_name",
-                        "strval": "UpTempEvent",
+                        "strval": "upTempEvent",
                         "InheritedType": 10
                       },
                       {
@@ -2827,6 +2828,71 @@
                       },
                       {
                         "nid": 1000586,
+                        "strtype": "CALL FUNCTION/Dont_export_function",
+                        "strval": "False",
+                        "InheritedType": 2
+                      }
+                    ],
+                    "InheritedType": 10
+                  }
+                ],
+                "InheritedType": 4
+              },
+              {
+                "disabled": false,
+                "nid": 1000616,
+                "strtype": "_event/EventHandler",
+                "strval": "RELEASED",
+                "childs": [
+                  {
+                    "nid": 1000617,
+                    "strtype": "_event/name",
+                    "strval": "upTempReleased",
+                    "InheritedType": 10
+                  },
+                  {
+                    "nid": 1000618,
+                    "strtype": "_event/condition_C",
+                    "strval": "",
+                    "InheritedType": 10
+                  },
+                  {
+                    "nid": 1000619,
+                    "strtype": "_event/condition_P",
+                    "strval": "",
+                    "InheritedType": 10
+                  },
+                  {
+                    "nid": 1000620,
+                    "strtype": "_event/action",
+                    "strval": "CALL FUNCTION",
+                    "childs": [
+                      {
+                        "nid": 1000621,
+                        "strtype": "CALL FUNCTION/Name",
+                        "strval": "CALL FUNCTION",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1000622,
+                        "strtype": "CALL FUNCTION/Call",
+                        "strval": "<{Function_name}>( event_struct )",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1000623,
+                        "strtype": "CALL FUNCTION/CallC",
+                        "strval": "<{Function_name}>( e );",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1000624,
+                        "strtype": "CALL FUNCTION/Function_name",
+                        "strval": "upTempEventFinished",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1000625,
                         "strtype": "CALL FUNCTION/Dont_export_function",
                         "strval": "False",
                         "InheritedType": 2
@@ -3159,6 +3225,71 @@
                   }
                 ],
                 "InheritedType": 4
+              },
+              {
+                "disabled": false,
+                "nid": 1000626,
+                "strtype": "_event/EventHandler",
+                "strval": "RELEASED",
+                "childs": [
+                  {
+                    "nid": 1000627,
+                    "strtype": "_event/name",
+                    "strval": "DownTempReleased",
+                    "InheritedType": 10
+                  },
+                  {
+                    "nid": 1000628,
+                    "strtype": "_event/condition_C",
+                    "strval": "",
+                    "InheritedType": 10
+                  },
+                  {
+                    "nid": 1000629,
+                    "strtype": "_event/condition_P",
+                    "strval": "",
+                    "InheritedType": 10
+                  },
+                  {
+                    "nid": 1000630,
+                    "strtype": "_event/action",
+                    "strval": "CALL FUNCTION",
+                    "childs": [
+                      {
+                        "nid": 1000631,
+                        "strtype": "CALL FUNCTION/Name",
+                        "strval": "CALL FUNCTION",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1000632,
+                        "strtype": "CALL FUNCTION/Call",
+                        "strval": "<{Function_name}>( event_struct )",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1000633,
+                        "strtype": "CALL FUNCTION/CallC",
+                        "strval": "<{Function_name}>( e );",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1000634,
+                        "strtype": "CALL FUNCTION/Function_name",
+                        "strval": "downTempEventFinished",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1000635,
+                        "strtype": "CALL FUNCTION/Dont_export_function",
+                        "strval": "False",
+                        "InheritedType": 2
+                      }
+                    ],
+                    "InheritedType": 10
+                  }
+                ],
+                "InheritedType": 4
               }
             ],
             "saved_objtypeKey": "CONTAINER"
@@ -3342,7 +3473,7 @@
     "uiExportFolderPath": "/home/john/Development/personal/thermostat-controller/firmware/src/ui",
     "projectExportFolderPath": "/home/john/Development/personal/thermostat-controller/firmware/src",
     "custom_variable_prefix": "uic",
-    "backup_cnt": 17,
+    "backup_cnt": 18,
     "autosave_cnt": 0,
     "group_color_cnt": 0,
     "lvgl_version": "9.1.0",
@@ -3360,7 +3491,7 @@
     "naming": "Name",
     "naming_force_lowercase": false,
     "naming_add_subcomponent": false,
-    "nidcnt": 1000587,
+    "nidcnt": 1000636,
     "BitDepth": 16,
     "Name": "SquareLine_Project"
   }
