@@ -3,24 +3,20 @@
 // LVGL version: 9.1.0
 // Project name: Thermostat_Controller
 
+#include <Arduino.h>
 #include "ui.h"
 
-void downTempPressed(lv_event_t * e)
+void downTempEvent(lv_event_t * e)
 {
-	// Your code here
+	Serial.println("Pressed: Down Temp");
 }
 
-void downTempLongPressed(lv_event_t * e)
+void upTempEvent(lv_event_t * e)
 {
-	// Your code here
+	Serial.println("Pressed: Up Temp");
 }
 
-void upTempPressed(lv_event_t * e)
-{
-	// Your code here
-}
-
-void upTempLongPressed(lv_event_t * e)
+void UpTempEvent(lv_event_t * e)
 {
 	// Your code here
 }

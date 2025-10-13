@@ -22,3 +22,23 @@ def upTempPressed(event_struct):
 def upTempLongPressed(event_struct):
     return
 
+
+def fullScreenClicked(event_struct):
+    return
+
+
+def downClicked(event_struct):
+    return
+
+
+def downTempEvent(event_struct):
+    return
+
+
+def upTempEvent(event_struct):
+    return
+
+
+def UpTempEvent(event_struct):
+    return
+

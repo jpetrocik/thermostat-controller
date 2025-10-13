@@ -20,17 +20,19 @@ extern lv_obj_t * ui_Heating;
 extern lv_obj_t * ui_Flame;
 extern lv_obj_t * ui_Main_Seperator;
 extern lv_obj_t * ui_Set_Temperature;
-extern void ui_event_Down_Arrow(lv_event_t * e);
 extern lv_obj_t * ui_Down_Arrow;
 extern lv_obj_t * ui_Panel2;
 extern lv_obj_t * ui_Panel3;
 extern lv_obj_t * ui_Temperature_F;
 extern lv_obj_t * ui_Set_Temperature_F;
-extern void ui_event_Up_Arrow(lv_event_t * e);
 extern lv_obj_t * ui_Up_Arrow;
 extern lv_obj_t * ui_WiFi_Off;
 extern lv_obj_t * ui_Wifi_On;
 extern lv_obj_t * ui_Flame_On;
+extern void ui_event_UpTempTarget(lv_event_t * e);
+extern lv_obj_t * ui_UpTempTarget;
+extern void ui_event_DownTempTarget(lv_event_t * e);
+extern lv_obj_t * ui_DownTempTarget;
 // CUSTOM VARIABLES
 
 #ifdef __cplusplus

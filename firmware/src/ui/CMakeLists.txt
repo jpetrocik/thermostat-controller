@@ -1,10 +1,10 @@
 SET(SOURCES ui_Main.c
-    ui_theme_manager.c
-    ui_themes.c
+    ui_theme_manager.cpp
+    ui_themes.cpp
     ui.c
     ui_comp_hook.c
     ui_helpers.c
-    ui_events.c
+    ui_events.cpp
     ui_img_flame_off_png.c
     ui_img_down_arrow_png.c
     ui_img_up_arrow_png.c

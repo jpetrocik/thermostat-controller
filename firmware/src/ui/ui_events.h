@@ -10,10 +10,8 @@
 extern "C" {
 #endif
 
-void downTempPressed(lv_event_t * e);
-void downTempLongPressed(lv_event_t * e);
-void upTempPressed(lv_event_t * e);
-void upTempLongPressed(lv_event_t * e);
+void upTempEvent(lv_event_t * e);
+void downTempEvent(lv_event_t * e);
 
 #ifdef __cplusplus
 } /*extern "C"*/
