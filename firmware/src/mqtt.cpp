@@ -8,6 +8,8 @@
 #include "mqtt.h"
 #include "switch.h"
 
+#define PUBLISH_INTERVAL 300000 // 5 minutes
+
 WiFiClient _espClient;
 PubSubClient _mqClient(_espClient);
 
@@ -19,7 +21,7 @@ char _statusTopic[100];
 char _lwtTopic[100];
 char _jsonStatusBuffer[140];
 DeviceConfig *_mqttDeviceConfig;
-unsigned long lastStatePublishCounter = 0;
+unsigned long lastStatePublish = 0;
 Switch *_mqttSwitch;
 
 void mqttCallback(char *topic, byte *payload, unsigned int length);
@@ -41,9 +43,9 @@ void mqttSetup(DeviceConfig *deviceConfig, Switch *switch1)
   _mqClient.setCallback(mqttCallback);
   //  _mqClient.setKeepAlive(120);
 
-  sprintf(_commandTopic, "%s/%s/%s/command", _mqttDeviceConfig->locationName, _mqttDeviceConfig->roomName, _mqttDeviceConfig->deviceName);
-  sprintf(_statusTopic, "%s/%s/%s/status", _mqttDeviceConfig->locationName, _mqttDeviceConfig->roomName, _mqttDeviceConfig->deviceName);
-  sprintf(_lwtTopic, "%s/%s/%s/LWT", _mqttDeviceConfig->locationName, _mqttDeviceConfig->roomName, _mqttDeviceConfig->deviceName);
+  snprintf(_commandTopic, sizeof(_commandTopic), "%s/%s/%s/command", _mqttDeviceConfig->locationName, _mqttDeviceConfig->roomName, _mqttDeviceConfig->deviceName);
+  snprintf(_statusTopic, sizeof(_statusTopic), "%s/%s/%s/status", _mqttDeviceConfig->locationName, _mqttDeviceConfig->roomName, _mqttDeviceConfig->deviceName);
+  snprintf(_lwtTopic, sizeof(_lwtTopic), "%s/%s/%s/LWT", _mqttDeviceConfig->locationName, _mqttDeviceConfig->roomName, _mqttDeviceConfig->deviceName);
 }
 
 void mqttLoop()
@@ -57,10 +59,10 @@ void mqttLoop()
     _mqClient.loop();
 
     // Publish state every 5 minutes
-    if (millis() > 5 * 60 * 1000 * lastStatePublishCounter)
+    if (millis() - lastStatePublish >= PUBLISH_INTERVAL)
     {
       mqttSendStatus();
-      lastStatePublishCounter++;
+      lastStatePublish = millis();
     }
   }
 }
@@ -76,7 +78,7 @@ void mqttConnect()
   if (!_mqClient.connected() && _nextReconnectAttempt < millis())
   {
 
-    sprintf(_jsonStatusBuffer, CLIENT_ID, ESP.getChipId());
+    snprintf(_jsonStatusBuffer, sizeof(_jsonStatusBuffer), CLIENT_ID, ESP.getChipId());
     if (_mqClient.connect(_jsonStatusBuffer, _lwtTopic, 0, true, "Offline"))
     {
       Serial.println("Connected to MQTT Server");
@@ -96,7 +98,7 @@ void mqttConnect()
         _nextReconnectAttempt = 30000;
 
       Serial.print("Will reattempt to connect in ");
-      Serial.print(_nextReconnectAttempt);
+      Serial.print(_nextReconnectAttempt / 1000);
       Serial.println(" seconds");
 
       _nextReconnectAttempt += millis();
@@ -132,7 +134,7 @@ void mqttSendStatus()
   {
     SWITCH_STATE currentRelayState = (SWITCH_STATE)_mqttSwitch->state();
 
-    sprintf(_jsonStatusBuffer, "{\"state\":\"%s\", \"status\":%i, \"chipId\":%i, \"ipAddress\":\"%s\", \"rssi\":\"%i dBm\"}",
+    snprintf(_jsonStatusBuffer, sizeof(_jsonStatusBuffer), "{\"state\":\"%s\", \"status\":%i, \"chipId\":%i, \"ipAddress\":\"%s\", \"rssi\":\"%i dBm\"}",
             currentRelayState == SWITCH_ON ? "ON" : "OFF",
             (int)currentRelayState,
             ESP.getChipId(),

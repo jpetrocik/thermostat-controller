@@ -44,7 +44,9 @@ XPT2046_Touchscreen touchscreen(XPT2046_CS, XPT2046_IRQ);
 
 uint32_t lcd_drawBufffer[DRAW_BUF_SIZE / 4];
 
+#ifdef DHT_ENABLED
 DHT20 DHT;
+#endif
 
 uint16_t temp = 73;
 
@@ -58,12 +60,9 @@ uint32_t lcd_tickProvider()
   return millis();
 }
 
-#ifndef __cplusplus
-extern "C"
-{
-#endif
   void incrementTemp(int8_t delta)
   {
+    //TODO Underflow issues with unsigned integer
     temp += delta;
     if (temp < 0)
     {
@@ -75,10 +74,8 @@ extern "C"
     }
     lv_label_set_text_fmt(ui_Set_Temperature, "%d", temp);
   }
-#ifndef __cplusplus
-}
-#endif
-long x, y, z;
+
+  long x, y, z;
 
 // Get the Touchscreen data
 void touchscreen_read(lv_indev_t *indev, lv_indev_data_t *data)

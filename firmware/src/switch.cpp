@@ -11,7 +11,10 @@ void Switch::setup(uint8_t buttonPin, uint8_t relayPin)
 
     relay.begin(relayPin);
     relay.setStateChangedHandler([this](RELAY_STATE state)
-                                 { this->switchStateChangeHandler(state == RELAY_CLOSED ? SWITCH_ON : SWITCH_OFF); });
+                                 { 
+                                    if (this->switchStateChangeHandler) {
+                                        this->switchStateChangeHandler(state == RELAY_CLOSED ? SWITCH_ON : SWITCH_OFF);
+                                     } });
 }
 
 void Switch::loop()
@@ -27,7 +30,7 @@ void Switch::setStateChangedHandler(SwitchStateChangeHandler handler)
 
 void Switch::toggle()
 {
-    relay.toogleRelay();
+    relay.toggleRelay();
 }
 
 void Switch::turnOff()

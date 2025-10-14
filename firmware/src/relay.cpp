@@ -7,7 +7,7 @@ void Relay::operateRelay(RELAY_STATE state)
     digitalWrite(pin, state);
 }
 
-void Relay::toogleRelay()
+void Relay::toggleRelay()
 {
     RELAY_STATE currentRelayState = relayState();
     if (currentRelayState == RELAY_CLOSED)
@@ -45,15 +45,16 @@ RELAY_STATE Relay::relayState()
 
 void Relay::loop()
 {
-    if (debounceTime < millis())
+    if (millis() >= debounceTime)
     {
         prevState = state;
 
         state = relayState();
         if (prevState != state)
         {
-            debounceTime = 50 + millis();
-            stateChangehandler(state);
+            debounceTime = millis() + 50;
+            if (stateChangehandler)
+                stateChangehandler(state);
         }
     }
 }

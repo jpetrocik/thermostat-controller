@@ -33,7 +33,7 @@ public:
     void begin(uint8_t relayPin);
     void setStateChangedHandler(RelayStateChangeHandler handler);
     void loop();
-    void toogleRelay();
+    void toggleRelay();
     void openRelay();
     void closeRelay();
     RELAY_STATE relayState();

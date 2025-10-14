@@ -14,7 +14,7 @@
 #define LED_OFF HIGH
 
 // #define MQTT_ENABLED
-// #define WEBSERVER_ENABLED
+#define WEBSERVER_ENABLED
 // #define OTA_ENABLED
 // #define MDNS_ENABLED
 

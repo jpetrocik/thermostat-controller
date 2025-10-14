@@ -2,13 +2,16 @@
 
 #ifdef WEBSERVER_ENABLED
 #include <Arduino.h>
-#include <ESP8266WebServer.h>
+#include <WebServer.h>
+#include <FS.h>
+#include <SPIFFS.h>
 #include <ArduinoJson.h>
 #include "switch.h"
 
-ESP8266WebServer server(80);
+WebServer server(80);
 char webserver_jsonStatusBuffer[300];
 DeviceConfig *webserver_deviceConfig;
+// TODO Replace with callback to main.cpp
 Switch *webserver_switch;
 
 void webServerLoop()
@@ -30,7 +33,7 @@ void handleTurnOn()
 
 void handleStatus()
 {
-  sprintf(webserver_jsonStatusBuffer, "{\"status\":%i, \"changed\":false}", (int)webserver_switch->state());
+  snprintf(webserver_jsonStatusBuffer, sizeof(webserver_jsonStatusBuffer), "{\"status\":%i, \"changed\":false}", (int)webserver_switch->state());
   server.send(200, "application/json", webserver_jsonStatusBuffer);
 }
 
@@ -41,7 +44,7 @@ void handleRestart()
   ESP.restart();
 }
 
-// TODO SHould return deviceConfig
+// TODO Should return deviceConfig
 void handleConfigureDevice()
 {
   Serial.println("Loading config data....");
@@ -74,31 +77,31 @@ void handleSaveConfigureDevice()
 
     if (argName == "device")
     {
-      argValue.toCharArray(webserver_deviceConfig->deviceName, 20);
+        argValue.toCharArray(webserver_deviceConfig->deviceName, 20);
     }
     else if (argName == "room")
     {
-      argValue.toCharArray(webserver_deviceConfig->roomName, 20);
+        argValue.toCharArray(webserver_deviceConfig->roomName, 20);
     }
     else if (argName == "location")
     {
-      argValue.toCharArray(webserver_deviceConfig->locationName, 20);
+        argValue.toCharArray(webserver_deviceConfig->locationName, 20);
     }
     else if (argName == "mqttHost")
     {
-      argValue.toCharArray(webserver_deviceConfig->mqttHost, 50);
+        argValue.toCharArray(webserver_deviceConfig->mqttHost, 50);
     }
     else if (argName == "ssid")
     {
-      argValue.toCharArray(webserver_deviceConfig->wifiSsid, 50);
+        argValue.toCharArray(webserver_deviceConfig->wifiSsid, 50);
     }
     else if (argName == "password")
     {
-      argValue.toCharArray(webserver_deviceConfig->wifiPassword, 50);
+        argValue.toCharArray(webserver_deviceConfig->wifiPassword, 50);
     }
     else if (argName == "disableLed")
     {
-      webserver_deviceConfig->disableLed = argValue == "true";
+        webserver_deviceConfig->disableLed = argValue == "true";
     }
   }
 
@@ -113,6 +116,10 @@ void webServerSetup(DeviceConfig *deviceConfig, Switch *switch1)
   webserver_switch = switch1;
 
   Serial.println("Starting web server on port 80");
+  if (!SPIFFS.begin())
+  {
+    Serial.println("Warning: SPIFFS mount failed");
+  }
   server.on("/", handleStatus);
   server.on("/switch/on", handleTurnOn);
   server.on("/switch/off", handleTurnOff);
