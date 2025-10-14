@@ -1180,7 +1180,27 @@
               },
               {
                 "part": "lv.PART.MAIN",
-                "childs": [],
+                "childs": [
+                  {
+                    "nid": 10000,
+                    "strtype": "_style/StyleState",
+                    "strval": "DEFAULT",
+                    "childs": [
+                      {
+                        "nid": 11210,
+                        "strtype": "_style/Image_reColor",
+                        "intarray": [
+                          0,
+                          0,
+                          0,
+                          125
+                        ],
+                        "InheritedType": 7
+                      }
+                    ],
+                    "InheritedType": 1
+                  }
+                ],
                 "nid": 1060,
                 "strtype": "IMAGE/Style_main",
                 "strval": "lv.PART.MAIN, Rectangle, Image, Transform",
@@ -3473,7 +3493,7 @@
     "uiExportFolderPath": "/home/john/Development/personal/thermostat-controller/firmware/src/ui",
     "projectExportFolderPath": "/home/john/Development/personal/thermostat-controller/firmware/src",
     "custom_variable_prefix": "uic",
-    "backup_cnt": 18,
+    "backup_cnt": 19,
     "autosave_cnt": 0,
     "group_color_cnt": 0,
     "lvgl_version": "9.1.0",
