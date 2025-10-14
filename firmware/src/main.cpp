@@ -1,24 +1,10 @@
-//
-//    FILE: DHT20.ino
-//  AUTHOR: Rob Tillaart
-// PURPOSE: Demo for DHT20 I2C humidity & temperature sensor
-//     URL: https://github.com/RobTillaart/DHT20
-//
-//  Always check datasheet - front view
-//
-//          +--------------+
-//  VDD ----| 1            |
-//  SDA ----| 2    DHT20   |
-//  GND ----| 3            |
-//  SCL ----| 4            |
-//          +--------------+
-
 #include <Arduino.h>
 #include "DHT20.h"
 #include <lvgl.h>
 #include <TFT_eSPI.h> // Hardware-specific library
 #include "ui/ui.h"
 #include <XPT2046_Touchscreen.h>
+#include "sensor.h"
 
 /*Set to your screen resolution and rotation*/
 #define TFT_HOR_RES 320
@@ -44,66 +30,49 @@ XPT2046_Touchscreen touchscreen(XPT2046_CS, XPT2046_IRQ);
 
 uint32_t lcd_drawBufffer[DRAW_BUF_SIZE / 4];
 
-#ifdef DHT_ENABLED
-DHT20 DHT;
-#endif
-
-uint16_t temp = 73;
-
-uint8_t count = 0;
+uint16_t setTemperature = 45;
+float temperature = 0;
+float humidity = 0;
 
 unsigned long lastUIUpdate = 0;
 const unsigned long UI_INTERVAL = 50; // The 50ms interval
+
+long touch_x, touch_y, touch_z;
 
 uint32_t lcd_tickProvider()
 {
   return millis();
 }
 
-  void incrementTemp(int8_t delta)
+void incrementTemp(int8_t delta)
+{
+  // TODO Underflow issues with unsigned integer
+  setTemperature += delta;
+  if (setTemperature < 0)
   {
-    //TODO Underflow issues with unsigned integer
-    temp += delta;
-    if (temp < 0)
-    {
-      temp = 0;
-    }
-    if (temp > 100)
-    {
-      temp = 100;
-    }
-    lv_label_set_text_fmt(ui_Set_Temperature, "%d", temp);
+    setTemperature = 0;
   }
+  if (setTemperature > 100)
+  {
+    setTemperature = 100;
+  }
+  lv_label_set_text_fmt(ui_Set_Temperature, "%d", setTemperature);
+}
 
-  long x, y, z;
-
-// Get the Touchscreen data
 void touchscreen_read(lv_indev_t *indev, lv_indev_data_t *data)
 {
-  // Checks if Touchscreen was touched, and prints X, Y and Pressure (Z)
   if (touchscreen.tirqTouched() && touchscreen.touched())
   {
-    // Get Touchscreen points
     TS_Point p = touchscreen.getPoint();
+
     // Calibrate Touchscreen points with map function to the correct width and height
-    x = map(p.x, 200, 3700, 1, TFT_HOR_RES);
-    y = map(p.y, 240, 3800, 1, TFT_VER_RES);
-    z = p.z;
+    touch_x = map(p.x, 200, 3700, 1, TFT_HOR_RES);
+    touch_y = map(p.y, 240, 3800, 1, TFT_VER_RES);
+    touch_z = p.z;
 
     data->state = LV_INDEV_STATE_PRESSED;
-
-    // Set the coordinates
-    data->point.x = x;
-    data->point.y = y;
-
-    // Print Touchscreen info about X, Y and Pressure (Z) on the Serial Monitor
-    // Serial.print("X = ");
-    // Serial.print(x);
-    // Serial.print(" | Y = ");
-    // Serial.print(y);
-    // Serial.print(" | Pressure = ");
-    // Serial.print(z);
-    // Serial.println();
+    data->point.x = touch_x;
+    data->point.y = touch_y;
   }
   else
   {
@@ -114,17 +83,13 @@ void touchscreen_read(lv_indev_t *indev, lv_indev_data_t *data)
 void setup()
 {
   Serial.begin(115200);
-  Serial.println(__FILE__);
-  Serial.print("DHT20 LIBRARY VERSION: ");
-  Serial.println(DHT20_LIB_VERSION);
-  Serial.println();
+  Serial.println("Thermostat Controller");
+
+  Wire.begin();
 
 #ifdef DHT_ENABLED
-  Wire.begin();
-  DHT.begin(); //  ESP32 default pins 21 22
+  sensor_setup(&humidity, &temperature);
 #endif
-
-  // delay(1000);
 
   lv_init();
 
@@ -156,66 +121,9 @@ void setup()
 void loop()
 {
 
-  //  boolean istouched = touchscreen.touched();
-  // if (istouched) {
-  //   Serial.println("TOUCHED");
-  //   istouched = false;
-  // }
-
 #ifdef DHT_ENABLED
-  if (millis() - DHT.lastRead() >= 1000)
-  {
-    //  READ DATA
-    uint32_t start = micros();
-    int status = DHT.read();
-    uint32_t stop = micros();
-
-    if ((count % 10) == 0)
-    {
-      count = 0;
-      Serial.println();
-      Serial.println("Type\tHumidity (%)\tTemp (°C)\tTime (µs)\tStatus");
-    }
-    count++;
-
-    Serial.print("DHT20 \t");
-    //  DISPLAY DATA, sensor has only one decimal.
-    Serial.print(DHT.getHumidity(), 1);
-    Serial.print("\t\t");
-    Serial.print(DHT.getTemperature(), 1);
-    Serial.print("\t\t");
-    Serial.print(stop - start);
-    Serial.print("\t\t");
-    switch (status)
-    {
-    case DHT20_OK:
-      Serial.print("OK");
-      break;
-    case DHT20_ERROR_CHECKSUM:
-      Serial.print("Checksum error");
-      break;
-    case DHT20_ERROR_CONNECT:
-      Serial.print("Connect error");
-      break;
-    case DHT20_MISSING_BYTES:
-      Serial.print("Missing bytes");
-      break;
-    case DHT20_ERROR_BYTES_ALL_ZERO:
-      Serial.print("All bytes read zero");
-      break;
-    case DHT20_ERROR_READ_TIMEOUT:
-      Serial.print("Read time out");
-      break;
-    case DHT20_ERROR_LASTREAD:
-      Serial.print("Error read too fast");
-      break;
-    default:
-      Serial.print("Unknown error");
-      break;
-    }
-    Serial.print("\n");
-  }
-
+  // TODO Temperature and humidity is only updated when 0 is returned
+  int err = sensor_loop();
 #endif
 
   if (millis() - lastUIUpdate >= UI_INTERVAL)
@@ -231,5 +139,3 @@ void loop()
   // }
   // delay(5); // Add a small delay to allow for smoother updates
 }
-
-//  -- END OF FILE --

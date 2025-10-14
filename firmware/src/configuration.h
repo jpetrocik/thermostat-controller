@@ -13,8 +13,9 @@
 #define LED_ON LOW
 #define LED_OFF HIGH
 
+// #define DHT_ENABLED
 // #define MQTT_ENABLED
-#define WEBSERVER_ENABLED
+// #define WEBSERVER_ENABLED
 // #define OTA_ENABLED
 // #define MDNS_ENABLED
 
@@ -27,7 +28,6 @@ struct DeviceConfig
   char mqttHost[50];
   char wifiSsid[25];
   char wifiPassword[50];
-  bool disableLed = false;
   bool dirty = false;
 };
 

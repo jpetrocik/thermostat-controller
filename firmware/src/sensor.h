@@ -1,11 +1,11 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
-#include "DHT20.h"
+#include "configuration.h"
 
 #ifdef DHT_ENABLED
-void sensorSetup();
-void sensorLoop();
+void sensor_setup(float *humidity, float *temperature);
+int sensor_loop();
 #endif
 
 #endif

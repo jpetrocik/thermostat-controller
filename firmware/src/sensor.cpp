@@ -1,68 +1,36 @@
 #include "configuration.h"
+
 #ifdef DHT_ENABLED
 #include <Arduino.h>
 #include "DHT20.h"
 
 static DHT20 DHT;
-static uint8_t count = 0;
+static float *humidityOut = 0;
+static float *temperatureOut = 0;
 
-void sensorSetup()
+void sensor_setup(float *humidity, float *temperature)
 {
-  Wire.begin();
-  DHT.begin(); // ESP32 default pins 21 22
+    humidityOut = humidity;
+    temperatureOut = temperature;
+
+    DHT.begin(); // ESP32 default pins 21 22
 }
 
-void sensorLoop()
+int sensor_loop()
 {
-  if (millis() - DHT.lastRead() >= 1000)
-  {
-    uint32_t start = micros();
-    int status = DHT.read();
-    uint32_t stop = micros();
-
-    if ((count % 10) == 0)
+    if (millis() - DHT.lastRead() >= 1000)
     {
-      count = 0;
-      Serial.println();
-      Serial.println("Type\tHumidity (%)\tTemp (°C)\tTime (µs)\tStatus");
-    }
-    count++;
+        int status = DHT.read();
 
-    Serial.print("DHT20 \t");
-    Serial.print(DHT.getHumidity(), 1);
-    Serial.print("\t\t");
-    Serial.print(DHT.getTemperature(), 1);
-    Serial.print("\t\t");
-    Serial.print(stop - start);
-    Serial.print("\t\t");
-    switch (status)
-    {
-    case DHT20_OK:
-      Serial.print("OK");
-      break;
-    case DHT20_ERROR_CHECKSUM:
-      Serial.print("Checksum error");
-      break;
-    case DHT20_ERROR_CONNECT:
-      Serial.print("Connect error");
-      break;
-    case DHT20_MISSING_BYTES:
-      Serial.print("Missing bytes");
-      break;
-    case DHT20_ERROR_BYTES_ALL_ZERO:
-      Serial.print("All bytes read zero");
-      break;
-    case DHT20_ERROR_READ_TIMEOUT:
-      Serial.print("Read time out");
-      break;
-    case DHT20_ERROR_LASTREAD:
-      Serial.print("Error read too fast");
-      break;
-    default:
-      Serial.print("Unknown error");
-      break;
+        switch (status)
+        {
+        case DHT20_OK:
+            *humidityOut = DHT.getHumidity();
+            *temperatureOut = DHT.getTemperature();
+            break;
+        }
+
+        return status;
     }
-    Serial.print("\n");
-  }
 }
 #endif
