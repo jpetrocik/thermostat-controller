@@ -11,29 +11,15 @@
 WebServer server(80);
 char webserver_jsonStatusBuffer[300];
 DeviceConfig *webserver_deviceConfig;
-// TODO Replace with callback to main.cpp
-Switch *webserver_switch;
 
 void webServerLoop()
 {
   server.handleClient();
 }
 
-void handleTurnOff()
-{
-  webserver_switch->turnOff();
-  server.send(200);
-}
-
-void handleTurnOn()
-{
-  webserver_switch->turnOn();
-  server.send(200);
-}
-
 void handleStatus()
 {
-  snprintf(webserver_jsonStatusBuffer, sizeof(webserver_jsonStatusBuffer), "{\"status\":%i, \"changed\":false}", (int)webserver_switch->state());
+  snprintf(webserver_jsonStatusBuffer, sizeof(webserver_jsonStatusBuffer), "{\"setTemp\":%i, \"heat\":\"on\", \"temperature\":%.1f, \"humidity\":%.1f}", (int)webserver_deviceConfig->setTemp, 0.0f, 0.0f);
   server.send(200, "application/json", webserver_jsonStatusBuffer);
 }
 
@@ -99,6 +85,10 @@ void handleSaveConfigureDevice()
     {
         argValue.toCharArray(webserver_deviceConfig->wifiPassword, 50);
     }
+    else if (argName == "temp")
+    {
+        webserver_deviceConfig->setTemp = argValue.toInt();
+    }
   }
 
   webserver_deviceConfig->dirty = true;
@@ -106,10 +96,9 @@ void handleSaveConfigureDevice()
   server.send(200);
 }
 
-void webServerSetup(DeviceConfig *deviceConfig, Switch *switch1)
+void webServerSetup(DeviceConfig *deviceConfig)
 {
   webserver_deviceConfig = deviceConfig;
-  webserver_switch = switch1;
 
   Serial.println("Starting web server on port 80");
   if (!SPIFFS.begin())
@@ -117,8 +106,6 @@ void webServerSetup(DeviceConfig *deviceConfig, Switch *switch1)
     Serial.println("Warning: SPIFFS mount failed");
   }
   server.on("/", handleStatus);
-  server.on("/switch/on", handleTurnOn);
-  server.on("/switch/off", handleTurnOff);
   server.on("/restart", HTTP_POST, handleRestart);
   server.on("/config", HTTP_GET, handleConfigureDevice);
   server.on("/config", HTTP_PUT, handleSaveConfigureDevice);

@@ -27,10 +27,12 @@ int sensor_loop()
         case DHT20_OK:
             *humidityOut = DHT.getHumidity();
             *temperatureOut = DHT.getTemperature();
-            break;
+            return 1;
         }
 
         return status;
     }
+
+    return 0;
 }
 #endif
