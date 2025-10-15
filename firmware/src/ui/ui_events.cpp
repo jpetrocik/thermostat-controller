@@ -8,7 +8,7 @@
 #include "configuration.h"
 #include <lvgl.h>
 
-void downTempEvent(lv_event_t *e)
+void incrementSetTemp(uint8_t delta, lv_obj_t *obj)
 {
 	DeviceConfig *config = currentDeviceConfig();
 	if (!config->heatEnabled)
@@ -16,54 +16,45 @@ void downTempEvent(lv_event_t *e)
 		return;
 	}
 
-	// Avoid using incrementTemp here to avoid marking dirty multiple times while holding the button
-	config->setTemp -= 1;
+	// The UI must be update here because dirty isn't set until the button is released. Using
+	config->setTemp += delta;
+	config->setTemp = constrain(config->setTemp, 0, 99);
+	lv_label_set_text_fmt(ui_SetTemperature, "%i", config->setTemp);
 
-	lv_obj_set_style_opa(ui_DownArrow, LV_OPA_30, LV_PART_MAIN | LV_STATE_DEFAULT);
+	lv_obj_set_style_opa(obj, LV_OPA_30, LV_PART_MAIN | LV_STATE_DEFAULT);
+}
+
+void setTempFinished(lv_obj_t *obj)
+{
+	DeviceConfig *config = currentDeviceConfig();
+	if (!config->heatEnabled)
+	{
+		return;
+	}
+
+	config->dirty = true;
+
+	lv_obj_set_style_opa(obj, LV_OPA_COVER, LV_PART_MAIN | LV_STATE_DEFAULT);
+}	
+
+void downTempEvent(lv_event_t *e)
+{
+	incrementSetTemp(-1, ui_DownArrow);
 }
 
 void upTempEvent(lv_event_t *e)
 {
-	DeviceConfig *config = currentDeviceConfig();
-	if (!config->heatEnabled)
-	{
-		return;
-	}
-
-	// Avoid using incrementTemp here to avoid marking dirty multiple times while holding the button
-	config->setTemp += 1;
-
-	lv_obj_set_style_opa(ui_UpArrow, LV_OPA_30, LV_PART_MAIN | LV_STATE_DEFAULT);
+	incrementSetTemp(1, ui_UpArrow);
 }
 
 void upTempEventFinished(lv_event_t *e)
 {
-	DeviceConfig *config = currentDeviceConfig();
-	if (!config->heatEnabled)
-	{
-		return;
-	}
-
-	lv_obj_set_style_opa(ui_UpArrow, LV_OPA_COVER, LV_PART_MAIN | LV_STATE_DEFAULT);
-	incrementTemp(0);
-
-	// lv_obj_set_style_image_recolor(ui_UpArrow, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-	// lv_obj_set_style_image_recolor_opa(ui_UpArrow, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+	setTempFinished(ui_UpArrow);
 }
 
 void downTempEventFinished(lv_event_t *e)
 {
-	DeviceConfig *config = currentDeviceConfig();
-	if (!config->heatEnabled)
-	{
-		return;
-	}
-
-	lv_obj_set_style_opa(ui_DownArrow, LV_OPA_COVER, LV_PART_MAIN | LV_STATE_DEFAULT);
-	incrementTemp(0);
-
-	// lv_obj_set_style_image_recolor(ui_DownArrow, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-	// lv_obj_set_style_image_recolor_opa(ui_DownArrow, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+	setTempFinished(ui_DownArrow);
 }
 
 void heatValueChanged(lv_event_t *e)

@@ -3,27 +3,14 @@
 #include "DHT20.h"
 #include "sensor.h"
 #include "lcd.h"
+#include "storage.h"
 
 DeviceConfig deviceConfig;
 
 float temperature = 0;
 float humidity = 0;
 
-void incrementTemp(int8_t delta)
-{
-  deviceConfig.setTemp += delta;
-  if (deviceConfig.setTemp < 0)
-  {
-    deviceConfig.setTemp = 0;
-  }
-
-  if (deviceConfig.setTemp > 100)
-  {
-    deviceConfig.setTemp = 100;
-  }
-
-  deviceConfig.dirty = true;
-}
+bool refreshUI = true;
 
 DeviceConfig *currentDeviceConfig()
 {
@@ -43,6 +30,26 @@ void setup()
 
   Wire.begin();
 
+#ifdef LITTLEFS_ENABLED
+  if (loadDeviceConfig(&deviceConfig))
+  {
+    Serial.println("Saved Configuration:");
+    Serial.printf(" Device: %s\n", deviceConfig.deviceName);
+    Serial.printf(" Room: %s\n", deviceConfig.roomName);
+    Serial.printf(" Location: %s\n", deviceConfig.locationName);
+    Serial.printf(" Hostname: %s\n", deviceConfig.hostname);
+    Serial.printf(" MQTT Host: %s\n", deviceConfig.mqttHost);
+    Serial.printf(" WiFi SSID: %s\n", deviceConfig.wifiSsid);
+    Serial.printf(" Set Temp: %d\n", deviceConfig.setTemp);
+    Serial.printf(" Heat Enabled: %s\n", deviceConfig.heatEnabled ? "true" : "false");
+    Serial.printf(" Hysteresis: %d\n", deviceConfig.hysteresis);
+  }
+  else
+  {
+    Serial.println("Using default device configuration");
+  }
+#endif
+
 #ifdef LCD_ENABLED
   lcd_setup();
 #endif
@@ -55,14 +62,30 @@ void setup()
 void loop()
 {
 
-// Called before saving configure to update UI if deviceConfig changed
 #ifdef LCD_ENABLED
-  lcd_loop();
+  lcd_loop(refreshUI);
+  refreshUI = false;
 #endif
 
   if (deviceConfig.dirty)
   {
+    // Clamp setTemp to valid range
+    deviceConfig.setTemp = constrain(deviceConfig.setTemp, 0, 99);
+
+    // Persist configuration
+#ifdef LITTLEFS_ENABLED
+    if (saveDeviceConfig(deviceConfig))
+    {
+      Serial.println("Configuration saved to LittleFS");
+    }
+    else
+    {
+      Serial.println("Failed to save configuration");
+    }
+#endif
     deviceConfig.dirty = false;
+
+    // TODO Save configuration to persistent storage
     Serial.println("Configuration changed:");
     Serial.printf(" Device: %s\n", deviceConfig.deviceName);
     Serial.printf(" Room: %s\n", deviceConfig.roomName);
@@ -73,6 +96,8 @@ void loop()
     Serial.printf(" Set Temp: %d\n", deviceConfig.setTemp);
     Serial.printf(" Heat Enabled: %s\n", deviceConfig.heatEnabled ? "true" : "false");
     Serial.printf(" Hysteresis: %d\n", deviceConfig.hysteresis);
+
+    refreshUI = true;
   }
 
 #ifdef DHT_ENABLED

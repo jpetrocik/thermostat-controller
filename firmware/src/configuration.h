@@ -12,6 +12,7 @@
 // #define WEBSERVER_ENABLED
 // #define OTA_ENABLED
 // #define MDNS_ENABLED
+#define LITTLEFS_ENABLED
 
 #define RELAY_PIN 14
 #define LED_PIN 2
@@ -52,6 +53,5 @@ struct DeviceConfig
   bool dirty = false;
 };
 
-void incrementTemp(int8_t delta);
 DeviceConfig* currentDeviceConfig();
 #endif

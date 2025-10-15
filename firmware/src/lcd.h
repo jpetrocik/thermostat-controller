@@ -7,6 +7,6 @@
 #define READ_UPDATE 1
 
 void lcd_setup();
-void lcd_loop();
+void lcd_loop(bool refresh);
 #endif
 #endif

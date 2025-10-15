@@ -70,26 +70,26 @@ void lcd_setup()
     // lv_timer_create(lcd_updateCookTime, 1000, NULL); // Create a timer to update the temperature every second
 }
 
-void lcd_loop()
+void lcd_loop(bool refresh)
 {
-    if (millis() - lastUIUpdate >= UI_UPDATE_INTERVAL)
+    if (refresh)
     {
-        lv_task_handler();
-
-        // lv_label_set_text_fmt(ui_Temperature, "%.1f\xB0C", temperature);
+        // lv_label_set_text_fmt(ui_Temperature, "%.1f", temperature);
         // lv_label_set_text_fmt(ui_Humidity, "%.1f%%", humidity);
 
         DeviceConfig *config = currentDeviceConfig();
-        if (config->dirty)
-        {
-            lv_label_set_text_fmt(ui_SetTemperature, "%i\xB0C", config->setTemp);
-            lv_obj_set_style_opa(ui_UpArrow, config->heatEnabled ? LV_OPA_COVER : LV_OPA_30, LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_obj_set_style_opa(ui_UpDivider, config->heatEnabled ? LV_OPA_COVER : LV_OPA_30, LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_obj_set_style_opa(ui_SetTemperature, config->heatEnabled ? LV_OPA_COVER : LV_OPA_30, LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_obj_set_style_opa(ui_SetTemperature_F, config->heatEnabled ? LV_OPA_COVER : LV_OPA_30, LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_obj_set_style_opa(ui_DownDivider, config->heatEnabled ? LV_OPA_COVER : LV_OPA_30, LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_obj_set_style_opa(ui_DownArrow, config->heatEnabled ? LV_OPA_COVER : LV_OPA_30, LV_PART_MAIN | LV_STATE_DEFAULT);
-        }
+        lv_label_set_text_fmt(ui_SetTemperature, "%i", config->setTemp);
+        lv_obj_set_style_opa(ui_UpArrow, config->heatEnabled ? LV_OPA_COVER : LV_OPA_30, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_opa(ui_UpDivider, config->heatEnabled ? LV_OPA_COVER : LV_OPA_30, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_opa(ui_SetTemperature, config->heatEnabled ? LV_OPA_COVER : LV_OPA_30, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_opa(ui_SetTemperature_F, config->heatEnabled ? LV_OPA_COVER : LV_OPA_30, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_opa(ui_DownDivider, config->heatEnabled ? LV_OPA_COVER : LV_OPA_30, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_opa(ui_DownArrow, config->heatEnabled ? LV_OPA_COVER : LV_OPA_30, LV_PART_MAIN | LV_STATE_DEFAULT);
+    }
+
+    if (millis() - lastUIUpdate >= UI_UPDATE_INTERVAL)
+    {
+        lv_task_handler();
         lastUIUpdate = millis();
     }
 }
