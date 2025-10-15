@@ -21,22 +21,19 @@ void incrementTemp(int8_t delta)
   {
     deviceConfig.setTemp = 100;
   }
-  //lv_label_set_text_fmt(ui_Set_Temperature, "%d", setTemperature);
+
+  deviceConfig.dirty = true;
 }
 
-void setTemp(int8_t temp)
+DeviceConfig *currentDeviceConfig()
 {
-  deviceConfig.setTemp = temp;
-  if (deviceConfig.setTemp < 0)
-  {
-    deviceConfig.setTemp = 0;
-  }
+  return &deviceConfig;
+}
 
-  if (deviceConfig.setTemp > 100)
-  {
-    deviceConfig.setTemp = 100;
-  }
-  //lv_label_set_text_fmt(ui_Set_Temperature, "%d", setTemperature);
+void heatEnabled(bool on)
+{
+  deviceConfig.heatEnabled = on;
+  Serial.println(on ? "Heating On" : "Heating Off");
 }
 
 void setup()
@@ -58,22 +55,36 @@ void setup()
 void loop()
 {
 
-#ifdef DHT_ENABLED
-  if (sensor_loop() == READ_UPDATE) {
-    // Update temperature display
-    // lv_label_set_text_fmt(temperature, "%.1f", temperature);
-    // lv_label_set_text_fmt(humidity, "%.1f%%", humidity);
-  }
-#endif
-
+// Called before saving configure to update UI if deviceConfig changed
 #ifdef LCD_ENABLED
   lcd_loop();
 #endif
 
-  // if (millis() % 1000 < 10)
-  // {
-  //   // Update temperature display every second
-  //   lv_label_set_text_fmt(ui_Temperature, "%d", temp++);
-  // }
-  // delay(5); // Add a small delay to allow for smoother updates
+  if (deviceConfig.dirty)
+  {
+    deviceConfig.dirty = false;
+    Serial.println("Configuration changed:");
+    Serial.printf(" Device: %s\n", deviceConfig.deviceName);
+    Serial.printf(" Room: %s\n", deviceConfig.roomName);
+    Serial.printf(" Location: %s\n", deviceConfig.locationName);
+    Serial.printf(" Hostname: %s\n", deviceConfig.hostname);
+    Serial.printf(" MQTT Host: %s\n", deviceConfig.mqttHost);
+    Serial.printf(" WiFi SSID: %s\n", deviceConfig.wifiSsid);
+    Serial.printf(" Set Temp: %d\n", deviceConfig.setTemp);
+    Serial.printf(" Heat Enabled: %s\n", deviceConfig.heatEnabled ? "true" : "false");
+    Serial.printf(" Hysteresis: %d\n", deviceConfig.hysteresis);
+  }
+
+#ifdef DHT_ENABLED
+  sensor_loop();
+#endif
+
+  if (!deviceConfig.heatEnabled)
+  {
+    // TODO Turn off heat relay
+  }
+  else
+  {
+    // TODO Control heat relay based on temperature and setTemp with hysteresis
+  }
 }

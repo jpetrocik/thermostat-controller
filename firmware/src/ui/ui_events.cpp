@@ -5,31 +5,92 @@
 
 #include <Arduino.h>
 #include "ui.h"
-
-void incrementTemp(int8_t delta);
+#include "configuration.h"
+#include <lvgl.h>
 
 void downTempEvent(lv_event_t *e)
 {
-	lv_obj_set_style_image_recolor(ui_Down_Arrow, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-	lv_obj_set_style_image_recolor_opa(ui_Down_Arrow, 125, LV_PART_MAIN | LV_STATE_DEFAULT);
-	incrementTemp(-1);
+	DeviceConfig *config = currentDeviceConfig();
+	if (!config->heatEnabled)
+	{
+		return;
+	}
+
+	// Avoid using incrementTemp here to avoid marking dirty multiple times while holding the button
+	config->setTemp -= 1;
+
+	lv_obj_set_style_opa(ui_DownArrow, LV_OPA_30, LV_PART_MAIN | LV_STATE_DEFAULT);
 }
 
 void upTempEvent(lv_event_t *e)
 {
-	lv_obj_set_style_image_recolor(ui_Up_Arrow, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-	lv_obj_set_style_image_recolor_opa(ui_Up_Arrow, 125, LV_PART_MAIN | LV_STATE_DEFAULT);
-	incrementTemp(1);
+	DeviceConfig *config = currentDeviceConfig();
+	if (!config->heatEnabled)
+	{
+		return;
+	}
+
+	// Avoid using incrementTemp here to avoid marking dirty multiple times while holding the button
+	config->setTemp += 1;
+
+	lv_obj_set_style_opa(ui_UpArrow, LV_OPA_30, LV_PART_MAIN | LV_STATE_DEFAULT);
 }
 
 void upTempEventFinished(lv_event_t *e)
 {
-	lv_obj_set_style_image_recolor(ui_Up_Arrow, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-	lv_obj_set_style_image_recolor_opa(ui_Up_Arrow, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+	DeviceConfig *config = currentDeviceConfig();
+	if (!config->heatEnabled)
+	{
+		return;
+	}
+
+	lv_obj_set_style_opa(ui_UpArrow, LV_OPA_COVER, LV_PART_MAIN | LV_STATE_DEFAULT);
+	incrementTemp(0);
+
+	// lv_obj_set_style_image_recolor(ui_UpArrow, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+	// lv_obj_set_style_image_recolor_opa(ui_UpArrow, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
 }
 
 void downTempEventFinished(lv_event_t *e)
 {
-	lv_obj_set_style_image_recolor(ui_Down_Arrow, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-	lv_obj_set_style_image_recolor_opa(ui_Down_Arrow, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+	DeviceConfig *config = currentDeviceConfig();
+	if (!config->heatEnabled)
+	{
+		return;
+	}
+
+	lv_obj_set_style_opa(ui_DownArrow, LV_OPA_COVER, LV_PART_MAIN | LV_STATE_DEFAULT);
+	incrementTemp(0);
+
+	// lv_obj_set_style_image_recolor(ui_DownArrow, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+	// lv_obj_set_style_image_recolor_opa(ui_DownArrow, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+}
+
+void heatValueChanged(lv_event_t *e)
+{
+	lv_obj_t *switch_obj = (lv_obj_t *)lv_event_get_target(e);
+
+	DeviceConfig *config = currentDeviceConfig();
+	config->heatEnabled = lv_obj_has_state(switch_obj, LV_STATE_CHECKED);
+	config->dirty = true;
+}
+
+void initializeSettingsScreen(lv_event_t *e)
+{
+	DeviceConfig *config = currentDeviceConfig();
+
+	lv_obj_set_state(ui_HeatOnSwitch, LV_STATE_CHECKED, config->heatEnabled);
+	lv_dropdown_set_selected(ui_HysteresisDropdown, config->hysteresis);
+	lv_label_set_text(ui_WiFiValue, config->wifiSsid);
+}
+
+void hytersisValueChanged(lv_event_t *e)
+{
+	lv_obj_t *dropdown_obj = (lv_obj_t *)lv_event_get_target(e);
+
+	uint32_t selectedIndex = lv_dropdown_get_selected(dropdown_obj);
+
+	DeviceConfig *config = currentDeviceConfig();
+	config->hysteresis = selectedIndex;
+	config->dirty = true;
 }

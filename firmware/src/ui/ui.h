@@ -29,6 +29,7 @@ extern "C" {
 
 ///////////////////// SCREENS ////////////////////
 #include "ui_Main.h"
+#include "ui_SettingsScreen.h"
 
 ///////////////////// VARIABLES ////////////////////
 
@@ -42,6 +43,7 @@ LV_IMG_DECLARE(ui_img_up_arrow_png);    // assets/up_arrow.png
 LV_IMG_DECLARE(ui_img_wifi_off_png);    // assets/wifi_off.png
 LV_IMG_DECLARE(ui_img_wifi_png);    // assets/wifi.png
 LV_IMG_DECLARE(ui_img_flame_png);    // assets/flame.png
+LV_IMG_DECLARE(ui_img_gear_png);    // assets/gear.png
 
 // FONTS
 LV_FONT_DECLARE(ui_font_Ubuntu_Bold_180);

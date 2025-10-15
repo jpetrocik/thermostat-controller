@@ -1,4 +1,5 @@
 ui_Main.c
+ui_SettingsScreen.c
 ui_theme_manager.cpp
 ui_themes.cpp
 ui.c
@@ -11,6 +12,7 @@ ui_img_up_arrow_png.c
 ui_img_wifi_off_png.c
 ui_img_wifi_png.c
 ui_img_flame_png.c
+ui_img_gear_png.c
 fonts/ui_font_Ubuntu_Bold_180.c
 fonts/ui_font_Ubuntu_Bold__45.c
 fonts/ui_font_Ubuntu_Bold__75.c

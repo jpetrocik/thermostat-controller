@@ -14,6 +14,9 @@ void upTempEvent(lv_event_t * e);
 void upTempEventFinished(lv_event_t * e);
 void downTempEvent(lv_event_t * e);
 void downTempEventFinished(lv_event_t * e);
+void initializeSettingsScreen(lv_event_t * e);
+void heatValueChanged(lv_event_t * e);
+void hytersisValueChanged(lv_event_t * e);
 
 #ifdef __cplusplus
 } /*extern "C"*/

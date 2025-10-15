@@ -50,3 +50,27 @@ def upTempEventFinished(event_struct):
 def downTempEventFinished(event_struct):
     return
 
+
+def heatOnOffEvent(event_struct):
+    return
+
+
+def initializeSettingsScreen(event_struct):
+    return
+
+
+def heatOnOffChanged(event_struct):
+    return
+
+
+def hytersisChanged(event_struct):
+    return
+
+
+def heatValueChanged(event_struct):
+    return
+
+
+def hytersisValueChanged(event_struct):
+    return
+

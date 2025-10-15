@@ -7,7 +7,7 @@
 #define CLIENT_ID "thermostat-%i"
 
 #define LCD_ENABLED
-#define DHT_ENABLED
+// #define DHT_ENABLED
 // #define MQTT_ENABLED
 // #define WEBSERVER_ENABLED
 // #define OTA_ENABLED
@@ -21,7 +21,7 @@
 #define LED_OFF HIGH
 
 // Determines how often the UI is updated
-#define UI_UPDATE_INTERVAL 50
+#define UI_UPDATE_INTERVAL 100
 
 // Screen resolution and rotation
 #define TFT_HOR_RES 320
@@ -33,7 +33,7 @@
 #define TOUCH_MOSI 23 // T_DIN
 #define TOUCH_MISO 19 // T_OUT
 #define TOUCH_CLK 18  // T_CLK
-#define TOUCH_CS 16   // T_CS
+#define TOUCH_CS 4    // T_CS
 
 #define DRAW_BUF_SIZE (TFT_HOR_RES * TFT_VER_RES / 10 * (LV_COLOR_DEPTH / 8))
 
@@ -47,10 +47,11 @@ struct DeviceConfig
   char wifiSsid[25];
   char wifiPassword[50];
   int8_t setTemp = 45;
+  bool heatEnabled = true;
+  int8_t hysteresis = 2;
   bool dirty = false;
 };
 
 void incrementTemp(int8_t delta);
-void setTemp(int8_t temp);
-
+DeviceConfig* currentDeviceConfig();
 #endif

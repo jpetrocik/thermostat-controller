@@ -5,10 +5,10 @@
       {
         "nid": 1000206,
         "strtype": "THEME_COLOR",
-        "strval": "Primary",
+        "strval": "PrimaryText",
         "intarray": [
-          176,
-          227,
+          200,
+          232,
           245,
           255
         ],
@@ -19,10 +19,46 @@
         "strtype": "THEME_COLOR",
         "strval": "PrimaryDisabled",
         "intarray": [
-          176,
-          227,
+          200,
+          232,
           245,
           130
+        ],
+        "InheritedType": 0
+      },
+      {
+        "nid": 1000664,
+        "strtype": "THEME_COLOR",
+        "strval": "SecondaryText",
+        "intarray": [
+          159,
+          186,
+          207,
+          255
+        ],
+        "InheritedType": 0
+      },
+      {
+        "nid": 1000665,
+        "strtype": "THEME_COLOR",
+        "strval": "PrimaryAccent",
+        "intarray": [
+          0,
+          201,
+          167,
+          255
+        ],
+        "InheritedType": 0
+      },
+      {
+        "nid": 1000666,
+        "strtype": "THEME_COLOR",
+        "strval": "Border",
+        "intarray": [
+          79,
+          109,
+          122,
+          255
         ],
         "InheritedType": 0
       }

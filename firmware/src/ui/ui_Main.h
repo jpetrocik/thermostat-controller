@@ -19,20 +19,23 @@ extern lv_obj_t * ui_Humidity;
 extern lv_obj_t * ui_Heating;
 extern lv_obj_t * ui_Flame;
 extern lv_obj_t * ui_Main_Seperator;
-extern lv_obj_t * ui_Set_Temperature;
-extern lv_obj_t * ui_Down_Arrow;
-extern lv_obj_t * ui_Panel2;
-extern lv_obj_t * ui_Panel3;
+extern lv_obj_t * ui_SetTemperature;
+extern lv_obj_t * ui_DownArrow;
+extern lv_obj_t * ui_UpDivider;
+extern lv_obj_t * ui_DownDivider;
 extern lv_obj_t * ui_Temperature_F;
-extern lv_obj_t * ui_Set_Temperature_F;
-extern lv_obj_t * ui_Up_Arrow;
-extern lv_obj_t * ui_WiFi_Off;
-extern lv_obj_t * ui_Wifi_On;
-extern lv_obj_t * ui_Flame_On;
+extern lv_obj_t * ui_SetTemperature_F;
+extern lv_obj_t * ui_UpArrow;
+extern lv_obj_t * ui_WiFiOff;
+extern lv_obj_t * ui_WifiOn;
+extern lv_obj_t * ui_FlameOn;
 extern void ui_event_UpTempTarget(lv_event_t * e);
 extern lv_obj_t * ui_UpTempTarget;
 extern void ui_event_DownTempTarget(lv_event_t * e);
 extern lv_obj_t * ui_DownTempTarget;
+extern lv_obj_t * ui_Settings;
+extern void ui_event_SettingsTarget(lv_event_t * e);
+extern lv_obj_t * ui_SettingsTarget;
 // CUSTOM VARIABLES
 
 #ifdef __cplusplus
