@@ -70,9 +70,9 @@ void lcd_setup()
     // lv_timer_create(lcd_updateCookTime, 1000, NULL); // Create a timer to update the temperature every second
 }
 
-void lcd_loop(bool refresh)
+void lcd_loop(bool uiStale)
 {
-    if (refresh)
+    if (uiStale)
     {
         // lv_label_set_text_fmt(ui_Temperature, "%.1f", temperature);
         // lv_label_set_text_fmt(ui_Humidity, "%.1f%%", humidity);

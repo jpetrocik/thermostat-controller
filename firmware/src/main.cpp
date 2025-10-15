@@ -10,7 +10,7 @@ DeviceConfig deviceConfig;
 float temperature = 0;
 float humidity = 0;
 
-bool refreshUI = true;
+bool uiStale = true;
 
 DeviceConfig *currentDeviceConfig()
 {
@@ -63,8 +63,8 @@ void loop()
 {
 
 #ifdef LCD_ENABLED
-  lcd_loop(refreshUI);
-  refreshUI = false;
+  lcd_loop(uiStale);
+  uiStale = false;
 #endif
 
   if (deviceConfig.dirty)
@@ -97,11 +97,13 @@ void loop()
     Serial.printf(" Heat Enabled: %s\n", deviceConfig.heatEnabled ? "true" : "false");
     Serial.printf(" Hysteresis: %d\n", deviceConfig.hysteresis);
 
-    refreshUI = true;
+    uiStale = true;
   }
 
 #ifdef DHT_ENABLED
-  sensor_loop();
+  if (sensor_loop()){
+    uiStale = true;
+  }
 #endif
 
   if (!deviceConfig.heatEnabled)
