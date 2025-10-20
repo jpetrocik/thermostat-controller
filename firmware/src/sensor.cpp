@@ -27,6 +27,7 @@ int sensor_loop()
         case DHT20_OK:
             *humidityOut = DHT.getHumidity();
             *temperatureOut = DHT.getTemperature();
+            // Serial.printf("Temperature: %.1f C, Humidity: %.1f %%\n", *temperatureOut, *humidityOut);
             return 1;
         }
 

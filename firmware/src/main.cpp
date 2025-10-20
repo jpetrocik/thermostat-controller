@@ -63,7 +63,7 @@ void loop()
 {
 
 #ifdef LCD_ENABLED
-  lcd_loop(uiStale);
+  lcd_loop(uiStale, temperature, humidity);
   uiStale = false;
 #endif
 

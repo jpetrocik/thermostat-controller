@@ -10,7 +10,7 @@
 #define TFT_SCLK 18
 #define TFT_CS   17   // Chip select control pin
 #define TFT_DC   16   // Data Command control pin
-#define TFT_RST  14   // Reset pin (could connect to RST pin)
+#define TFT_RST  -1   // Reset pin (could connect to RST pin)
 
 #define LOAD_GLCD   // Font 1. Original Adafruit 8 pixel font needs ~1820 bytes in FLASH
 #define LOAD_FONT2  // Font 2. Small 16 pixel high font, needs ~3534 bytes in FLASH, 96 characters

@@ -7,7 +7,7 @@
 #define CLIENT_ID "thermostat-%i"
 
 #define LCD_ENABLED
-// #define DHT_ENABLED
+#define DHT_ENABLED
 // #define MQTT_ENABLED
 // #define WEBSERVER_ENABLED
 // #define OTA_ENABLED
@@ -30,11 +30,13 @@
 #define TFT_ROTATION LV_DISPLAY_ROTATION_0
 
 // Touchscreen pins
-#define TOUCH_IRQ 22  // T_IRQ
+#define TOUCH_IRQ 5  // T_IRQ
 #define TOUCH_MOSI 23 // T_DIN
 #define TOUCH_MISO 19 // T_OUT
 #define TOUCH_CLK 18  // T_CLK
 #define TOUCH_CS 4    // T_CS
+
+#define TFT_BACKLIGHT 27
 
 #define DRAW_BUF_SIZE (TFT_HOR_RES * TFT_VER_RES / 10 * (LV_COLOR_DEPTH / 8))
 

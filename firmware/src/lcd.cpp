@@ -43,6 +43,9 @@ void touchscreen_read(lv_indev_t *indev, lv_indev_data_t *data)
 
 void lcd_setup()
 {
+    pinMode(TFT_BACKLIGHT, OUTPUT);
+    digitalWrite(TFT_BACKLIGHT, HIGH); // Turn on backlight
+
     lv_init();
 
     // touchscreenSPI.begin(XPT2046_CLK, XPT2046_MISO, XPT2046_MOSI, XPT2046_CS);
@@ -65,17 +68,16 @@ void lcd_setup()
     lv_indev_set_long_press_repeat_time(indev, 250);
 
     ui_init();
-    Serial.println("Setup done");
 
     // lv_timer_create(lcd_updateCookTime, 1000, NULL); // Create a timer to update the temperature every second
 }
 
-void lcd_loop(bool uiStale)
+void lcd_loop(bool uiStale, float temperature, float humidity)
 {
     if (uiStale)
     {
-        // lv_label_set_text_fmt(ui_Temperature, "%.1f", temperature);
-        // lv_label_set_text_fmt(ui_Humidity, "%.1f%%", humidity);
+        lv_label_set_text_fmt(ui_Temperature, "%d", (int)temperature);
+        lv_label_set_text_fmt(ui_HumidityValue, "%d", (int)humidity);
 
         DeviceConfig *config = currentDeviceConfig();
         lv_label_set_text_fmt(ui_SetTemperature, "%i", config->setTemp);
